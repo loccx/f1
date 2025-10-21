@@ -13,7 +13,7 @@ int main() {
     sf::RenderWindow window(sf::VideoMode({windowWidth, windowHeight}), "monaco");
     window.setFramerateLimit(60);
 
-    const std::string filename = "../monaco_track2.txt";
+    const std::string filename = "../monaco_track.txt";
     std::ifstream file(filename);
     if (!file) { std::cerr << "failed to open " << filename << '\n'; return 1; }
 
@@ -33,7 +33,7 @@ int main() {
     }
 
     Cars cars;
-    cars.position.push_back({4000.f, 3000.f});
+    cars.position.push_back({80.f * 32.f, 220.f * 32.f});
     cars.rotation.push_back(0.f);
     cars.velocity.push_back({0.f, 0.f});
 
