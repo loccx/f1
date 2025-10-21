@@ -1,14 +1,9 @@
-// physics.hpp
 #pragma once
 #include <vector>
 #include <SFML/System.hpp>
+#include "input.hpp"
 
-struct InputState {
-    bool accelerate = false;
-    bool brake = false;
-    bool turnLeft = false;
-    bool turnRight = false;
-};
+struct InputState;
 
 struct Cars {
     std::vector<sf::Vector2f> position;

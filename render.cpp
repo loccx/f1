@@ -7,7 +7,7 @@ void renderCars(sf::RenderWindow& window, const Cars& cars, const sf::Texture& c
         sf::Sprite car(carTexture);
         car.setOrigin({carTexture.getSize().x / 2.f, carTexture.getSize().y / 2.f});
         car.setPosition(cars.position[i]);
-        car.setRotation(sf::degrees(cars.rotation[i] * 180.f / 3.14159265f + 180.f));
+        car.setRotation(sf::degrees(cars.rotation[i] * 180.f / 3.14159265f));
         window.draw(car);
     }
 }
