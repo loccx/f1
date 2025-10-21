@@ -5,6 +5,7 @@
 #include "physics.hpp"
 #include "input.hpp"
 #include "render.hpp"
+#include "utils/collision.hpp"
 
 int main() {
     const unsigned windowWidth = 1600;
@@ -24,8 +25,12 @@ int main() {
     TileMap map;
     map.load(mapData, width, height, {32, 32});
 
+    sf::Image collision_map = generateCollisionImage(mapData, width, height, 32);
+
     sf::Texture carTexture;
-    if (!carTexture.loadFromFile("../car1.png")) { std::cerr << "failed to load ../car1.png\n"; return 1; }
+    if (!carTexture.loadFromFile("../car1.png")) {
+        std::cerr << "failed to load ../car1.png\n"; return 1;
+    }
 
     Cars cars;
     cars.position.push_back({4000.f, 3000.f});
@@ -53,7 +58,7 @@ int main() {
         std::vector<InputState> inputs(1);
         inputs[0] = getCarInput();
         updateInput(inputs);
-        updateCarsPhysics(cars, inputs, dt);
+        updateCarsPhysics(cars, inputs, dt, collision_map);
 
         camera.setCenter(cars.position[0]);
 
