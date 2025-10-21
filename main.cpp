@@ -1,46 +1,66 @@
-#include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
-
 #include <iostream>
 #include <fstream>
-#include <string>
-#include <string>
 #include "map.hpp"
+#include "physics.hpp"
+#include "input.hpp"
+#include "render.hpp"
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode({1400u, 1000u}), "map");
+    sf::RenderWindow window(sf::VideoMode({1000u, 600u}), "monaco");
+    window.setFramerateLimit(60);
 
-    // test file to map nums
-    const std::string filename = "../track2.txt"; //back dir, since run from build directory
+    //tile map
+    const std::string filename = "../monaco_track.txt";
     std::ifstream file(filename);
-    if (!file) {
-        std::cerr << "failed to open " << filename << '\n';
-        return 1;
-    }
+    if (!file) { std::cerr << "failed to open " << filename << '\n'; return 1; }
 
-    std::string line;
-    unsigned int width = 0, height = 0;
-    file >> width >> height; // width first, height second
-    std::vector<int> mapdata(width * height);
-    for (unsigned int i = 0; i < width * height; i++) {
-        file >> mapdata[i];
-    }
+    unsigned width, height;
+    file >> width >> height;
+    std::vector<int> mapData(width * height);
+    for (unsigned i = 0; i < width * height; ++i) file >> mapData[i];
 
     TileMap map;
-    map.load(mapdata, width, height, {32, 32});
+    map.load(mapData, width, height, {32, 32});
 
+    sf::Texture carTexture;
+    if (!carTexture.loadFromFile("../car1.png")) { std::cerr << "failed to load ../car1.png\n"; return 1; }
+
+    //load cars
+    Cars cars;
+    cars.position.push_back({3200.f, 2400.f});
+    cars.rotation.push_back(0.f);
+    cars.velocity.push_back({0.f, 0.f});
+
+    sf::View camera(sf::FloatRect({0.f, 0.f}, {800.f, 600.f}));
+
+    sf::Clock clock;
     while (window.isOpen()) {
-        while (auto event = window.pollEvent()) {
+        while (const std::optional event = window.pollEvent()) {
             if (event->is<sf::Event::Closed>()) {
                 window.close();
             }
+            else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
+                if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
+                    window.close();
+            }
         }
 
-        window.clear();
+        float dt = clock.restart().asSeconds();
+
+        std::vector<InputState> inputs(1);
+        inputs[0] = getCarInput();
+        updateCarsPhysics(cars, inputs, dt);
+
+        camera.setCenter(cars.position[0]);
+        window.setView(camera);
+
+        //render
+        window.clear(sf::Color::Black);
         window.draw(map);
+        renderCars(window, cars, carTexture);
         window.display();
     }
-
     return 0;
 }
 

@@ -3,8 +3,8 @@ project(F1)
 
 set(CMAKE_CXX_STANDARD 20)
 
-find_package(SFML REQUIRED COMPONENTS Graphics Window)
+find_package(SFML REQUIRED COMPONENTS Graphics Window System)
 
-add_executable(main main.cpp map.cpp)
+add_executable(main main.cpp map.cpp input.cpp physics.cpp render.cpp)
 
-target_link_libraries(main PRIVATE SFML::Graphics SFML::Window)
+target_link_libraries(main PRIVATE SFML::Graphics SFML::Window SFML::System)
