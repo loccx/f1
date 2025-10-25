@@ -8,17 +8,15 @@ InputState getCarInput() {
     input.turnLeft   = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A);
     input.turnRight  = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D);
 
-    input.emergencyBrakeButton = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space);
+    input.ebrake = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P);
 
     return input;
 }
 
 void updateInput(std::vector<InputState>& inputs) {
     for (auto& in : inputs) {
-        static bool prevPressed = false;
-        if (in.emergencyBrakeButton && !prevPressed) {
-            in.emergencyBrakeActive = !in.emergencyBrakeActive;
+        if (in.ebrake) {
+            in.emergencyBrakeActive ^= 1;
         }
-        prevPressed = in.emergencyBrakeButton;
     }
 }

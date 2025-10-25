@@ -7,7 +7,7 @@ struct InputState {
     bool brake = false;
     bool turnLeft = false;
     bool turnRight = false;
-    bool emergencyBrakeButton = false;
+    bool ebrake = false;
     bool emergencyBrakeActive = false;
 };
 
